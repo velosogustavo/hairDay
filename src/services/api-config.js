@@ -3,4 +3,3 @@ export const apiConfig = {
 
 }
 
-`${apiConfig.baseURL}/schedules`
