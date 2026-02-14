@@ -1,6 +1,8 @@
 import dayjs from "dayjs"
 
 import {scheduleNew} from "../../services/schedules-new.js"
+import {scheduleDay} from "../schedules/load.js"
+
 
 const form = document.querySelector("form") 
 const clientName = document.getElementById("client")
@@ -19,7 +21,6 @@ form.onsubmit = async (event) =>{
     event.preventDefault()
 
     try {
-        //recuperando o nome do cliente
         const name = clientName.value.trim()
 
         if(!name){
@@ -34,19 +35,24 @@ form.onsubmit = async (event) =>{
             return alert("Selecione a hora.")
         }
 
-        // Recupera somente a hora
         const [hour] = hourSelected.innerText.split(":")
 
         // Insere a hora na data
         const when = dayjs(selectedDate.value).add(hour, "hour")
 
-        // Gera um ID
         const id = new Date().getTime()
+
+        // faz o agendamento.
         await scheduleNew({
             id,
             name,
             when,
         })
+
+        // Recarrega o agendamento
+        await scheduleDay()
+
+        clientName.value = ""
 
     } catch (error) {
         alert("Não foi possivel realizar o agendamento")
